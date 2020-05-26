@@ -26,7 +26,7 @@ helpers do
   end
 
   def sorted_lists(lists)
-    complete_lists, incomplete_lists = 
+    complete_lists, incomplete_lists =
       lists.partition { |list| complete?(list) }
 
     incomplete_lists.each { |list| yield list, lists.index(list) }
@@ -34,7 +34,7 @@ helpers do
   end
 
   def sorted_todos(todos)
-    complete_todos, incomplete_todos = 
+    complete_todos, incomplete_todos =
       todos.partition { |todo| todo[:completed] }
     incomplete_todos.each { |todo| yield todo, todos.index(todo) }
     complete_todos.each { |todo| yield todo, todos.index(todo) }
@@ -50,14 +50,13 @@ def error_for_list(name)
   if !(1..100).cover?(name.size)
     'List name must have from 1 to 100 characters.'
   elsif session[:lists].any? { |list| list[:name] == name }
-    "List name \"#{list_name}\" is already in use."
+    "List name \"#{name}\" is already in use."
   end
 end
 
 def error_for_todo(name)
-  if !(1..100).cover?(name.size)
-    'Todo name must have from 1 to 100 characters.'
-  end
+  'Todo name must have from 1 to 100 characters.' unless
+    (1..100).cover?(name.size)
 end
 
 get '/' do
@@ -98,25 +97,25 @@ end
 
 # View a single todo list
 get '/lists/:id' do
-  @list_id =  params[:id].to_i
+  @list_id = params[:id].to_i
   @list = session[:lists][@list_id]
   erb :list, layout: :layout
 end
 
 # Edit an existing todo list
 get '/lists/:id/edit' do
-  @list_id =  params[:id].to_i
+  @list_id = params[:id].to_i
   @list = session[:lists][@list_id]
   erb :edit_list, layout: :layout
 end
 
 # Update an existing todo list (save edits)
 post '/lists/:id' do
-  @list_id =  params[:id].to_i
+  @list_id = params[:id].to_i
   @list = session[:lists][@list_id]
   list_name = params[:list_name].strip
   if list_name == @list[:name]
-    redirect "/lists/#{@list_id}" 
+    redirect "/lists/#{@list_id}"
   else
     error = error_for_list(list_name)
     if error
@@ -124,9 +123,9 @@ post '/lists/:id' do
       erb :edit_list, layout: :layout
     else
       @list[:name] = list_name
-      session[:success] = "List successfully updated."
+      session[:success] = 'List successfully updated.'
       redirect "/lists/#{@list_id}"
-    end  
+    end
   end
 end
 
@@ -139,7 +138,7 @@ end
 
 # Add a new todo to a todo list
 post '/lists/:list_id/todos' do
-  @list_id =  params[:list_id].to_i
+  @list_id = params[:list_id].to_i
   @list = session[:lists][@list_id]
   todo_name = params[:todo].strip
   error = error_for_todo(todo_name)
@@ -149,7 +148,7 @@ post '/lists/:list_id/todos' do
   else
     @list[:todos] << { name: todo_name, completed: false }
     session[:success] = "Todo \"#{todo_name}\" added."
-    redirect "/lists/#{ @list_id }"
+    redirect "/lists/#{@list_id}"
   end
 end
 
@@ -170,8 +169,9 @@ post '/lists/:list_id/todos/:todo_id' do
   @list = session[:lists][@list_id]
   todo_id = params[:todo_id].to_i
   @list[:todos][todo_id][:completed] = params[:completed] == 'true'
-  session[:success] = "All \"#{@list[:name]}\"todos completed." if complete?(@list)
-  redirect "/lists/#{@list_id}"  
+  session[:success] = "All \"#{@list[:name]}\"todos completed." if
+    complete?(@list)
+  redirect "/lists/#{@list_id}"
 end
 
 # Complete all todos
@@ -182,6 +182,5 @@ post '/lists/:list_id/complete_all_todos' do
     todo[:completed] = true
   end
   session[:success] = "All \"#{@list[:name]}\"todos completed."
-  redirect "/lists/#{@list_id}"  
+  redirect "/lists/#{@list_id}"
 end
-
