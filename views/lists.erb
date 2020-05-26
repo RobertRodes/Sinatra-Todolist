@@ -1,0 +1,20 @@
+<ul id="lists">
+  <% if session[:lists].empty? %>    
+    <h2>You have no lists.</h2>
+  <% else %>
+    <% sorted_lists(@lists) do |list, idx| %>
+      <li class="<%= list_classes(list) %>">
+        <a href="/lists/<%= idx %>">
+          <h2><%= list[:name]%></h2> 
+          <p>
+            <%= open_todo_count(list) %> / <%= todos_count(list) %>
+          </p>
+        </a>
+      </li>
+    <% end %>
+  <% end %>
+</ul>
+
+<% content_for :header_links do %>
+  <div class="actions"><a class="add" href="/lists/new">Add New List</a></div>
+<% end %>
