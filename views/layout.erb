@@ -6,27 +6,31 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=PT+Sans">
     <link rel="stylesheet" href="/stylesheets/whitespace-reset.css">
     <link rel="stylesheet" href="/stylesheets/application.css">
+    <script src="/javascript/jquery-2.2.4.js"></script>
+    <script src="/javascript/application.js"></script>
   </head>
   <body>
     <header>
       <h1>Todo Tracker</h1>
-      <%= yield_content :header_links %>
+      <%== yield_content :header_links %>
     </header>
 
     <% if session[:success] %>
       <div class="flash success">
         <p><%= session.delete(:success) %></p>
       </div>
-    <% end %>
-
-    <% if session[:error] %>
+    <% elsif session[:error] %>
       <div class="flash error">
         <p><%= session.delete(:error) %></p>
       </div>
+    <% else %>
+      <div class="flash success" style="display:none;">
+        <p></p>
+      </div>    
     <% end %>
 
     <main>
-      <%= yield %>
+      <%== yield %>
     </main>
   </body>
 </html>

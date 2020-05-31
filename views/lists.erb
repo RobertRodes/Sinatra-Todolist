@@ -2,9 +2,9 @@
   <% if session[:lists].empty? %>    
     <h2>You have no lists.</h2>
   <% else %>
-    <% sorted_lists(@lists) do |list, idx| %>
+    <% sorted_lists(@lists) do |list| %>
       <li class="<%= list_classes(list) %>">
-        <a href="/lists/<%= idx %>">
+        <a href="/lists/<%= list[:id] %>">
           <h2><%= list[:name]%></h2> 
           <p>
             <%= open_todo_count(list) %> / <%= todos_count(list) %>

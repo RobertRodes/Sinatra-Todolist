@@ -1,3 +1,6 @@
+<%@list%>
+<%@todo_id%>
+
 <section id="todos" class="<%= list_classes(@list) %>">
   <header>
     <h2><%= @list[:name] %></h2>
@@ -11,14 +14,14 @@
     </ul>
   </header>
   <ul>
-    <% sorted_todos(@list[:todos]) do |todo, idx| %>
-      <%= todo[:completed] ? '<li class="complete">' : '<li>' %>
-        <form action="/lists/<%= @list_id  %>/todos/<%= idx %>" method="post" class="check">
+    <% sorted_todos(@list[:todos]) do |todo| %>
+      <%== todo[:completed] ? '<li class="complete">' : '<li>' %>
+        <form action="/lists/<%= @list_id  %>/todos/<%= todo[:id] %>" method="post" class="check">
           <input type="hidden" name="completed" value="<%= !todo[:completed] %>" />
           <button type="submit">Complete</button>
         </form>
         <h3><%= todo[:name] %></h3>
-        <form action="/lists/<%= @list_id  %>/todos/<%= idx %>/destroy" method="post" class="delete">
+        <form action="/lists/<%= @list_id  %>/todos/<%= todo[:id] %>/destroy" method="post" class="delete">
           <button type="submit">Delete</button>
         </form>
       </li>
